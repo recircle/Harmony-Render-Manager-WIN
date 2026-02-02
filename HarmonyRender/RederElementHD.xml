@@ -19,3 +19,37 @@
   <zPartitionRange val="1" defaultValue="1"/>
   <cleanUpPartitionFolders val="true"/>
 </attrs>
+
+
+<module type="WRITE" name="Write" pos="-50,50,1" publishUnderTab="Write">
+	<options>
+		<collapsed val="false"/>
+		<version val="1"/>
+	</options>
+	<attrs>
+		<exportToMovie val="true"/>
+		<drawingName val="frames/final-"/>
+		<moviePath val="frames/output"/>
+		<movieFormat val="com.toonboom.prores.mov.1.0"/>
+		<movieAudio/>
+		<movieVideo/>
+		<movieVideoaudio val="com.toonboom.prores.mov.1.0:enableSound(1)com.toonboom.prores.mov.1.0:sampleRate(22050)com.toonboom.prores.mov.1.0:nChannels(2)com.toonboom.prores.mov.1.0:videoCodec(prores4444)com.toonboom.prores.mov.1.0:alpha(1)"/>
+		<leadingZeros val="3"/>
+		<start val="1"/>
+		<drawingType val="TGA"/>
+		<enabling>
+			<filter val="ALWAYS"/>
+			<filterName/>
+			<filterResX val="720"/>
+			<filterResY val="540"/>
+		</enabling>
+		<scriptMovie val="false"/>
+		<scriptEditor val="// Following code will be called at the end of Write Node rendering
+// operations to create a movie file from rendered images.
+// ..."/>
+		<colorSpace val="Rec.709"/>
+		<compositePartitioning val="NoCompositePartitioning"/>
+		<zPartitionRange val="1" defaultValue="1"/>
+		<cleanUpPartitionFolders val="true"/>
+	</attrs>
+</module>

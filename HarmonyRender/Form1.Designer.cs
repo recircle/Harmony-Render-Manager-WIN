@@ -60,20 +60,23 @@ namespace HarmonyRender
             this.buttBrowse = new System.Windows.Forms.Button();
             this.rederingTextOutput = new System.Windows.Forms.TextBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.dataGridViewImageColumn3 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.buttAddDir = new System.Windows.Forms.Button();
-            this.buttAddFile = new System.Windows.Forms.Button();
-            this.buttRenderAll = new System.Windows.Forms.Button();
             this.PanelForBar = new System.Windows.Forms.Panel();
-            this.buttDelSelected = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renderListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridViewImageColumn1 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.dataGridViewImageColumn2 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.dataGridViewImageColumn3 = new System.Windows.Forms.DataGridViewImageColumn();
+            this.buttDelSelected = new System.Windows.Forms.Button();
+            this.buttAddDir = new System.Windows.Forms.Button();
+            this.buttAddFile = new System.Windows.Forms.Button();
+            this.buttRenderAll = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.videoCodec = new System.Windows.Forms.ComboBox();
             this.nameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.exportNameDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.exportPathDataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,6 +100,7 @@ namespace HarmonyRender
             this.defaultOutputFolder.Size = new System.Drawing.Size(290, 20);
             this.defaultOutputFolder.TabIndex = 1;
             this.defaultOutputFolder.Text = "Set default export dir";
+            this.defaultOutputFolder.TextChanged += new System.EventHandler(this.defaultOutputFolder_TextChanged);
             this.defaultOutputFolder.DragDrop += new System.Windows.Forms.DragEventHandler(this.defaultOutputFolder_DragDrop);
             this.defaultOutputFolder.DragEnter += new System.Windows.Forms.DragEventHandler(this.defaultOutputFolder_DragEnter);
             // 
@@ -158,7 +162,7 @@ namespace HarmonyRender
             this.dataGridView.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Gray;
             this.dataGridView.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(1124, 764);
+            this.dataGridView.Size = new System.Drawing.Size(1124, 760);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentClick);
             this.dataGridView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_CellMouseUp);
@@ -339,6 +343,78 @@ namespace HarmonyRender
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 9;
             // 
+            // PanelForBar
+            // 
+            this.PanelForBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PanelForBar.Controls.Add(this.progressBar);
+            this.PanelForBar.Location = new System.Drawing.Point(535, 55);
+            this.PanelForBar.MaximumSize = new System.Drawing.Size(600, 6);
+            this.PanelForBar.MinimumSize = new System.Drawing.Size(600, 6);
+            this.PanelForBar.Name = "PanelForBar";
+            this.PanelForBar.Size = new System.Drawing.Size(600, 6);
+            this.PanelForBar.TabIndex = 10;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.exportToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1161, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.renderListToolStripMenuItem,
+            this.importListToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // renderListToolStripMenuItem
+            // 
+            this.renderListToolStripMenuItem.Name = "renderListToolStripMenuItem";
+            this.renderListToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.renderListToolStripMenuItem.Text = "Export xml list";
+            this.renderListToolStripMenuItem.Click += new System.EventHandler(this.renderListToolStripMenuItem_Click);
+            // 
+            // importListToolStripMenuItem
+            // 
+            this.importListToolStripMenuItem.Name = "importListToolStripMenuItem";
+            this.importListToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+            this.importListToolStripMenuItem.Text = "Import xml list";
+            this.importListToolStripMenuItem.Click += new System.EventHandler(this.importListToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
             // dataGridViewImageColumn1
             // 
             this.dataGridViewImageColumn1.HeaderText = "Render";
@@ -365,6 +441,23 @@ namespace HarmonyRender
             this.dataGridViewImageColumn3.Image = global::HarmonyRender.Properties.Resources.STATUS_EMPTY;
             this.dataGridViewImageColumn3.Name = "dataGridViewImageColumn3";
             this.dataGridViewImageColumn3.Width = 60;
+            // 
+            // buttDelSelected
+            // 
+            this.buttDelSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttDelSelected.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.buttDelSelected.FlatAppearance.BorderSize = 0;
+            this.buttDelSelected.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttDelSelected.Image = global::HarmonyRender.Properties.Resources.REMOVE_FILE;
+            this.buttDelSelected.Location = new System.Drawing.Point(15, 857);
+            this.buttDelSelected.Margin = new System.Windows.Forms.Padding(0);
+            this.buttDelSelected.MaximumSize = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.MinimumSize = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.Name = "buttDelSelected";
+            this.buttDelSelected.Size = new System.Drawing.Size(30, 30);
+            this.buttDelSelected.TabIndex = 11;
+            this.buttDelSelected.UseVisualStyleBackColor = true;
+            this.buttDelSelected.Click += new System.EventHandler(this.buttDelSelected_Click);
             // 
             // buttAddDir
             // 
@@ -408,86 +501,35 @@ namespace HarmonyRender
             this.buttRenderAll.UseVisualStyleBackColor = true;
             this.buttRenderAll.Click += new System.EventHandler(this.renderAll_Click);
             // 
-            // PanelForBar
+            // label5
             // 
-            this.PanelForBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.PanelForBar.Controls.Add(this.progressBar);
-            this.PanelForBar.Location = new System.Drawing.Point(535, 55);
-            this.PanelForBar.MaximumSize = new System.Drawing.Size(600, 6);
-            this.PanelForBar.MinimumSize = new System.Drawing.Size(600, 6);
-            this.PanelForBar.Name = "PanelForBar";
-            this.PanelForBar.Size = new System.Drawing.Size(600, 6);
-            this.PanelForBar.TabIndex = 10;
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.ForeColor = System.Drawing.Color.White;
+            this.label5.Location = new System.Drawing.Point(70, 864);
+            this.label5.MaximumSize = new System.Drawing.Size(120, 15);
+            this.label5.MinimumSize = new System.Drawing.Size(120, 15);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(120, 15);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Export settings";
             // 
-            // buttDelSelected
+            // videoCodec
             // 
-            this.buttDelSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttDelSelected.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.buttDelSelected.FlatAppearance.BorderSize = 0;
-            this.buttDelSelected.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttDelSelected.Image = global::HarmonyRender.Properties.Resources.ADD_FILE;
-            this.buttDelSelected.Location = new System.Drawing.Point(15, 857);
-            this.buttDelSelected.Margin = new System.Windows.Forms.Padding(0);
-            this.buttDelSelected.MaximumSize = new System.Drawing.Size(30, 30);
-            this.buttDelSelected.MinimumSize = new System.Drawing.Size(30, 30);
-            this.buttDelSelected.Name = "buttDelSelected";
-            this.buttDelSelected.Size = new System.Drawing.Size(30, 30);
-            this.buttDelSelected.TabIndex = 11;
-            this.buttDelSelected.UseVisualStyleBackColor = true;
-            this.buttDelSelected.Click += new System.EventHandler(this.buttDelSelected_Click);
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.exportToolStripMenuItem,
-            this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1161, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.settingsToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
-            // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.renderListToolStripMenuItem});
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
-            this.exportToolStripMenuItem.Text = "Export";
-            // 
-            // renderListToolStripMenuItem
-            // 
-            this.renderListToolStripMenuItem.Name = "renderListToolStripMenuItem";
-            this.renderListToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.renderListToolStripMenuItem.Text = "Render list";
-            this.renderListToolStripMenuItem.Click += new System.EventHandler(this.renderListToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.videoCodec.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.videoCodec.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.videoCodec.FormattingEnabled = true;
+            this.videoCodec.Items.AddRange(new object[] {
+            "proresHQ",
+            "proresLT",
+            "prores444",
+            "prores4444Alpha"});
+            this.videoCodec.Location = new System.Drawing.Point(187, 862);
+            this.videoCodec.Name = "videoCodec";
+            this.videoCodec.Size = new System.Drawing.Size(208, 21);
+            this.videoCodec.TabIndex = 20;
+            this.videoCodec.SelectedIndexChanged += new System.EventHandler(this.videoCodec_SelectedIndexChanged);
             // 
             // nameDataGridViewTextBoxColumn2
             // 
@@ -526,6 +568,8 @@ namespace HarmonyRender
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1161, 911);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.videoCodec);
             this.Controls.Add(this.buttDelSelected);
             this.Controls.Add(this.PanelForBar);
             this.Controls.Add(this.rederingTextOutput);
@@ -540,7 +584,7 @@ namespace HarmonyRender
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "HarmonyRender";
+            this.Text = "HarmonyRender 22";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.PanelForBar.ResumeLayout(false);
@@ -595,6 +639,9 @@ namespace HarmonyRender
         private System.Windows.Forms.DataGridViewImageColumn Render;
         private System.Windows.Forms.DataGridViewImageColumn Remove;
         private System.Windows.Forms.DataGridViewImageColumn Status;
+        private System.Windows.Forms.ToolStripMenuItem importListToolStripMenuItem;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox videoCodec;
     }
 }
 

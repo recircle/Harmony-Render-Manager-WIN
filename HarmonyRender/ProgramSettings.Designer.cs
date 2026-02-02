@@ -38,6 +38,7 @@
             this.exportPrefix1 = new System.Windows.Forms.TextBox();
             this.exportPrefix2 = new System.Windows.Forms.TextBox();
             this.exportFileName = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.exportFileName)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,10 +66,10 @@
             this.videoExport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.videoExport.FormattingEnabled = true;
             this.videoExport.Items.AddRange(new object[] {
-            "MOV-png",
-            "H264",
-            "SEQUENCE-png"});
-            this.videoExport.Location = new System.Drawing.Point(12, 72);
+            "4444alpha",
+            "HQ",
+            "LT"});
+            this.videoExport.Location = new System.Drawing.Point(12, 94);
             this.videoExport.Name = "videoExport";
             this.videoExport.Size = new System.Drawing.Size(208, 21);
             this.videoExport.TabIndex = 3;
@@ -78,7 +79,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(9, 54);
+            this.label1.Location = new System.Drawing.Point(9, 76);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(87, 15);
             this.label1.TabIndex = 4;
@@ -88,7 +89,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(9, 113);
+            this.label2.Location = new System.Drawing.Point(9, 135);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 15);
             this.label2.TabIndex = 5;
@@ -98,7 +99,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label3.Location = new System.Drawing.Point(9, 176);
+            this.label3.Location = new System.Drawing.Point(9, 198);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 15);
             this.label3.TabIndex = 6;
@@ -108,7 +109,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(9, 240);
+            this.label4.Location = new System.Drawing.Point(9, 262);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(120, 15);
             this.label4.TabIndex = 7;
@@ -117,7 +118,7 @@
             // exportPrefix1
             // 
             this.exportPrefix1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.exportPrefix1.Location = new System.Drawing.Point(12, 132);
+            this.exportPrefix1.Location = new System.Drawing.Point(12, 154);
             this.exportPrefix1.Name = "exportPrefix1";
             this.exportPrefix1.Size = new System.Drawing.Size(205, 13);
             this.exportPrefix1.TabIndex = 8;
@@ -126,7 +127,7 @@
             // exportPrefix2
             // 
             this.exportPrefix2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.exportPrefix2.Location = new System.Drawing.Point(12, 194);
+            this.exportPrefix2.Location = new System.Drawing.Point(12, 216);
             this.exportPrefix2.Name = "exportPrefix2";
             this.exportPrefix2.Size = new System.Drawing.Size(205, 13);
             this.exportPrefix2.TabIndex = 9;
@@ -135,7 +136,7 @@
             // exportFileName
             // 
             this.exportFileName.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.exportFileName.Location = new System.Drawing.Point(12, 258);
+            this.exportFileName.Location = new System.Drawing.Point(12, 280);
             this.exportFileName.Maximum = new decimal(new int[] {
             5,
             0,
@@ -155,9 +156,24 @@
             0,
             0});
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.CausesValidation = false;
+            this.label5.Enabled = false;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.ForeColor = System.Drawing.Color.Gray;
+            this.label5.Location = new System.Drawing.Point(12, 35);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(628, 15);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "C:\\Program Files (x86)\\Toon Boom Animation\\Toon Boom Harmony 20 Premium\\win64\\bin" +
+    "\\HarmonyPremium.exe";
+            // 
             // ProgramSettings
             // 
             this.ClientSize = new System.Drawing.Size(864, 453);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.exportFileName);
             this.Controls.Add(this.exportPrefix2);
             this.Controls.Add(this.exportPrefix1);
@@ -192,5 +208,6 @@
         private System.Windows.Forms.TextBox exportPrefix1;
         private System.Windows.Forms.TextBox exportPrefix2;
         private System.Windows.Forms.NumericUpDown exportFileName;
+        private System.Windows.Forms.Label label5;
     }
 }

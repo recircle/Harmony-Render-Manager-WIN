@@ -1,17 +1,19 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Security;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using System.Diagnostics;
-using System.Drawing;
-using System.Threading;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace HarmonyRender
 {
@@ -24,6 +26,9 @@ namespace HarmonyRender
         private string m_defaultOutputFolder = "";
         private int renderFileNum = 0;
         private bool renderAllFiles = false;
+        private int importXMListNum = 0;
+        private int renderProres = 0;
+        private int renderMaxNum = 0;
 
         //stall check
         private static int countDown = 350;
@@ -43,7 +48,9 @@ namespace HarmonyRender
 
             //progressBar.BackColor = Color.Black;
 
-            
+            videoCodec.SelectedItem = "proresHQ";
+
+
         }
 
         //add folder files button
@@ -217,7 +224,16 @@ namespace HarmonyRender
             {
                 m_defaultOutputFolder = ofd.FileName.Replace(ofd.SafeFileName, "");
                 defaultOutputFolder.Text = m_defaultOutputFolder;
-            } 
+            }
+
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                DataGridViewRow row = dataGridView.Rows[i];
+                TBfiles file = row.DataBoundItem as TBfiles;
+                file.ExportPath = m_defaultOutputFolder;
+            }
+
+            dataGridView.Refresh();
         }
 
         //render all files button
@@ -296,7 +312,36 @@ namespace HarmonyRender
                 var writeNode = document.XPathSelectElement("//scenes/scene[@name = 'Top']//module[@name = 'Write']");
 
                 var rendName = file.ExportPath + file.ExportName;
-                writeNode.Add(exporVideoSettings(rendName));
+                //writeNode.Add(exporVideoSettings(rendName));
+                //writeNode.Add(exporVideoProresHQ(rendName));
+
+                //TODO add formats menu
+                switch (renderProres)
+                {
+                    case 0:
+                        writeNode.Add(exporVideoProresHQ(rendName));
+                        Console.WriteLine("HQ index " + renderProres);
+                        break;
+
+                    case 1:
+                        writeNode.Add(exporVideoProresLT(rendName));
+                        Console.WriteLine("LT index " + renderProres);
+                        break;
+
+                    case 2:
+                        writeNode.Add(exporVideoProres444(rendName));
+                        Console.WriteLine("444 index " + renderProres);
+                        break;
+
+                    case 3:
+                        writeNode.Add(exporVideoProres444Alpha(rendName));
+                        break;
+
+                    default:
+                        writeNode.Add(exporVideoProresHQ(rendName));
+                        Console.WriteLine("default index " + renderProres);
+                        break;
+                };
 
                 FileStream fs = File.OpenWrite(newFileName);
                 document.Save(fs);
@@ -316,6 +361,7 @@ namespace HarmonyRender
 
                 //rederingTextOutput.Text = "RENDERING " + file.ExportName;
                 //progressBar.Maximum = file.Frames;
+                renderMaxNum = file.Frames;
                 SetProgresBar(progressBar, 0, file.Frames);
                 SetTextBox(rederingTextOutput, "RENDERING " + file.ExportName);
 
@@ -359,6 +405,149 @@ namespace HarmonyRender
 
             return xmlTree;
         }
+
+        //TODO color space withouth value new XElement("colorSpace"), or with new XElement("colorSpace", new XAttribute("val", "Rec.709")),
+
+        // enableSound(1)com 
+        // videoCodec(prores4444)com - prores4444 prores422HQ prores422LT
+        // alpha(1)
+
+        // resolution
+        // new XElement("filterResX", new XAttribute("val", "720")),
+        // new XElement("filterResY", new XAttribute("val", "540"))
+
+        XElement exporVideoProres444Alpha(string movieName)
+        {
+            var xmlTree = new XElement("attrs",
+                new XElement("exportToMovie", new XAttribute("val", "true")),
+                new XElement("drawingName", new XAttribute("val", "frames/final-")),
+                new XElement("moviePath", new XAttribute("val", movieName)),
+                new XElement("movieFormat", new XAttribute("val", "com.toonboom.prores.mov.1.0")),
+                new XElement("movieAudio"),
+                new XElement("movieVideo"),
+                new XElement("movieVideoaudio", new XAttribute("val", "com.toonboom.prores.mov.1.0:enableSound(1)com.toonboom.prores.mov.1.0:sampleRate(22050)com.toonboom.prores.mov.1.0:nChannels(2)com.toonboom.prores.mov.1.0:videoCodec(prores4444)com.toonboom.prores.mov.1.0:alpha(1)")),
+                new XElement("leadingZeros", new XAttribute("val", "3")),
+                new XElement("start", new XAttribute("val", "1")),
+                new XElement("drawingType", new XAttribute("val", "TGA")),
+
+                new XElement("enabling",
+                    new XElement("filter", new XAttribute("val", "ALWAYS")),
+                    new XElement("filterName"),
+                    new XElement("filterResX", new XAttribute("val", "720")),
+                    new XElement("filterResY", new XAttribute("val", "540"))
+                ),
+
+                new XElement("scriptMovie", new XAttribute("val", "false")),
+                new XElement("scriptEditor", new XAttribute("val", "")),
+                new XElement("colorSpace"),
+
+                new XElement("compositePartitioning", new XAttribute("val", "NoCompositePartitioning")),
+                new XElement("zPartitionRange", new XAttribute("val", "1"), new XAttribute("defaultValue", "1")),
+                new XElement("cleanUpPartitionFolders", new XAttribute("val", "true"))
+            );
+
+            return xmlTree;
+        }
+
+        XElement exporVideoProres444(string movieName)
+        {
+            var xmlTree = new XElement("attrs",
+                new XElement("exportToMovie", new XAttribute("val", "true")),
+                new XElement("drawingName", new XAttribute("val", "frames/final-")),
+                new XElement("moviePath", new XAttribute("val", movieName)),
+                new XElement("movieFormat", new XAttribute("val", "com.toonboom.prores.mov.1.0")),
+                new XElement("movieAudio"),
+                new XElement("movieVideo"),
+                new XElement("movieVideoaudio", new XAttribute("val", "com.toonboom.prores.mov.1.0:enableSound(1)com.toonboom.prores.mov.1.0:sampleRate(22050)com.toonboom.prores.mov.1.0:nChannels(2)com.toonboom.prores.mov.1.0:videoCodec(prores4444)com.toonboom.prores.mov.1.0:alpha(0)")),
+                new XElement("leadingZeros", new XAttribute("val", "3")),
+                new XElement("start", new XAttribute("val", "1")),
+                new XElement("drawingType", new XAttribute("val", "TGA")),
+
+                new XElement("enabling",
+                    new XElement("filter", new XAttribute("val", "ALWAYS")),
+                    new XElement("filterName"),
+                    new XElement("filterResX", new XAttribute("val", "720")),
+                    new XElement("filterResY", new XAttribute("val", "540"))
+                ),
+
+                new XElement("scriptMovie", new XAttribute("val", "false")),
+                new XElement("scriptEditor", new XAttribute("val", "")),
+                new XElement("colorSpace"),
+
+                new XElement("compositePartitioning", new XAttribute("val", "NoCompositePartitioning")),
+                new XElement("zPartitionRange", new XAttribute("val", "1"), new XAttribute("defaultValue", "1")),
+                new XElement("cleanUpPartitionFolders", new XAttribute("val", "true"))
+            );
+
+            return xmlTree;
+        }
+
+        XElement exporVideoProresHQ(string movieName)
+        {
+            var xmlTree = new XElement("attrs",
+                new XElement("exportToMovie", new XAttribute("val", "true")),
+                new XElement("drawingName", new XAttribute("val", "frames/final-")),
+                new XElement("moviePath", new XAttribute("val", movieName)),
+                new XElement("movieFormat", new XAttribute("val", "com.toonboom.prores.mov.1.0")),
+                new XElement("movieAudio"),
+                new XElement("movieVideo"),
+                new XElement("movieVideoaudio", new XAttribute("val", "com.toonboom.prores.mov.1.0:enableSound(1)com.toonboom.prores.mov.1.0:sampleRate(22050)com.toonboom.prores.mov.1.0:nChannels(2)com.toonboom.prores.mov.1.0:videoCodec(prores422HQ)com.toonboom.prores.mov.1.0:alpha(0)")),
+                new XElement("leadingZeros", new XAttribute("val", "3")),
+                new XElement("start", new XAttribute("val", "1")),
+                new XElement("drawingType", new XAttribute("val", "TGA")),
+
+                new XElement("enabling",
+                    new XElement("filter", new XAttribute("val", "ALWAYS")),
+                    new XElement("filterName"),
+                    new XElement("filterResX", new XAttribute("val", "720")),
+                    new XElement("filterResY", new XAttribute("val", "540"))
+                ),
+
+                new XElement("scriptMovie", new XAttribute("val", "false")),
+                new XElement("scriptEditor", new XAttribute("val", "")),
+                new XElement("colorSpace"),
+
+                new XElement("compositePartitioning", new XAttribute("val", "NoCompositePartitioning")),
+                new XElement("zPartitionRange", new XAttribute("val", "1"), new XAttribute("defaultValue", "1")),
+                new XElement("cleanUpPartitionFolders", new XAttribute("val", "true"))
+            );
+
+            return xmlTree;
+        }
+
+        XElement exporVideoProresLT(string movieName)
+        {
+            var xmlTree = new XElement("attrs",
+                new XElement("exportToMovie", new XAttribute("val", "true")),
+                new XElement("drawingName", new XAttribute("val", "frames/final-")),
+                new XElement("moviePath", new XAttribute("val", movieName)),
+                new XElement("movieFormat", new XAttribute("val", "com.toonboom.prores.mov.1.0")),
+                new XElement("movieAudio"),
+                new XElement("movieVideo"),
+                new XElement("movieVideoaudio", new XAttribute("val", "com.toonboom.prores.mov.1.0:enableSound(1)com.toonboom.prores.mov.1.0:sampleRate(22050)com.toonboom.prores.mov.1.0:nChannels(2)com.toonboom.prores.mov.1.0:videoCodec(prores422LT)com.toonboom.prores.mov.1.0:alpha(0)")),
+                new XElement("leadingZeros", new XAttribute("val", "3")),
+                new XElement("start", new XAttribute("val", "1")),
+                new XElement("drawingType", new XAttribute("val", "TGA")),
+
+                new XElement("enabling",
+                    new XElement("filter", new XAttribute("val", "ALWAYS")),
+                    new XElement("filterName"),
+                    new XElement("filterResX", new XAttribute("val", "720")),
+                    new XElement("filterResY", new XAttribute("val", "540"))
+                ),
+
+                new XElement("scriptMovie", new XAttribute("val", "false")),
+                new XElement("scriptEditor", new XAttribute("val", "")),
+                new XElement("colorSpace"),
+
+                new XElement("compositePartitioning", new XAttribute("val", "NoCompositePartitioning")),
+                new XElement("zPartitionRange", new XAttribute("val", "1"), new XAttribute("defaultValue", "1")),
+                new XElement("cleanUpPartitionFolders", new XAttribute("val", "true"))
+            );
+
+            return xmlTree;
+        }
+
 
         //THREADS
         public void StartRendering(string folder, string filePath, TBfiles file)
@@ -472,6 +661,8 @@ namespace HarmonyRender
         delegate void SetTextOnControl(Control controlToChange, string value);
         public void SetProgresBar(Control controlToChange, int value, int max = 0)
         {
+            if (value > renderMaxNum) value = renderMaxNum;
+
             if (controlToChange.InvokeRequired)
             {
                 SetValueOnControl DDD = new SetValueOnControl(SetProgresBar);
@@ -602,6 +793,15 @@ namespace HarmonyRender
             m_defaultOutputFolder = $"{System.IO.Path.GetFullPath(path)}\\";
             defaultOutputFolder.Text = m_defaultOutputFolder;
 
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                DataGridViewRow row = dataGridView.Rows[i];
+                TBfiles file = row.DataBoundItem as TBfiles;
+                file.ExportPath = m_defaultOutputFolder;
+            }
+
+            dataGridView.Refresh();
+
             Console.WriteLine("EXPORT FOLDER! " + path);
         }
 
@@ -625,7 +825,95 @@ namespace HarmonyRender
 
         private void renderListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //start video export form
+
+            string header = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><fileList></fileList>";
+            XDocument doc = XDocument.Parse(header);
+            XElement files = doc.Root;
+
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                DataGridViewRow row = dataGridView.Rows[i];
+                TBfiles file = row.DataBoundItem as TBfiles;
+
+                XElement rd = new XElement("file", new object[] {
+                    new XElement("id", file.Id),
+                    new XElement("name", file.Name),
+                    new XElement("path", file.Path),
+                    new XElement("characterList", file.CharactersList),
+                    new XElement("frames", file.Frames),
+                    new XElement("exportName", file.ExportName),
+                    new XElement("exportPath", file.ExportPath)
+                });
+
+                files.Add(rd);
+            }
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.CheckPathExists = true;
+            saveFileDialog.DefaultExt = "xml";
+            saveFileDialog.RestoreDirectory = true;
+            //saveFileDialog.FileName = "XMLOutput";
+            //saveFileDialog.InitialDirectory = "C:\\";
+            //saveFileDialog.CheckFileExists = true;
+            //saveFileDialog.Filter = "XML (*.xml)|*.xml|All (*.*)|*.*";
+            //saveFileDialog.FilterIndex = 2;
+
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                doc.Save(saveFileDialog.FileName);
+            }
+        }
+
+        private void importListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Add xml render list",
+                CheckFileExists = true,
+                CheckPathExists = true,
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.xml",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+                ReadOnlyChecked = false,
+                ShowReadOnly = true
+            };
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                if (ofd.ReadOnlyChecked)
+                {
+                    dataGridView.Rows.Clear();
+                    dataGridView.Refresh();
+                }
+
+                XDocument doc = XDocument.Load(ofd.FileName);
+                //XElement files = doc.Root;
+
+                //TODO add new numbering if multiple lists are imported
+                int XMListNum = 0;
+
+                foreach (XElement elem in doc.Descendants("file"))
+                {
+                    TBfiles TBfile = new TBfiles();
+                    TBfile.Id = int.Parse(elem.Element("id").Value) + importXMListNum;
+                    TBfile.Name = (string)elem.Element("name").Value;
+                    TBfile.Path = (string)elem.Element("path").Value;
+                    TBfile.ExportName = (string)elem.Element("exportName").Value;
+                    TBfile.Frames = int.Parse(elem.Element("frames").Value);
+                    TBfile.ExportPath = (string)elem.Element("exportPath").Value;
+
+                    tBfilesBindingSource.Add(new TBfiles() { Id = TBfile.Id, Name = TBfile.Name, ExportName = TBfile.ExportName, ExportPath = TBfile.ExportPath, Frames = TBfile.Frames, Path = TBfile.Path });
+
+                    XMListNum = TBfile.Id;
+
+                    //Console.WriteLine(XMListNum);
+
+                }
+
+                importXMListNum = XMListNum + 1;
+            }
         }
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -638,6 +926,18 @@ namespace HarmonyRender
 
         }
 
-        
+        private void defaultOutputFolder_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void videoCodec_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            renderProres = videoCodec.SelectedIndex;
+
+            //Console.WriteLine(videoCodec.Text + " index " + renderProres);
+            
+        }
     }
 }

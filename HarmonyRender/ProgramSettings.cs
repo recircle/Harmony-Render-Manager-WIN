@@ -12,6 +12,8 @@ namespace HarmonyRender
 {
     public partial class ProgramSettings : Form
     {
+        private string harmonyPath;
+
         public ProgramSettings()
         {
             InitializeComponent();            
@@ -55,7 +57,10 @@ namespace HarmonyRender
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 string path = System.IO.Path.GetFullPath(ofd.FileName);
-                Console.WriteLine(path);
+                harmonyPath = path.Replace(@"\", @"\\");
+
+                harmonyPathTextBox.Text = harmonyPath;
+                Console.WriteLine(harmonyPath);
             }
         }
 
@@ -66,11 +71,12 @@ namespace HarmonyRender
 
         private void ProgramSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Save();
 
             if (MessageBox.Show("Do you want to save changes?", "Settings", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                e.Cancel = true;
+                //e.Cancel = true;
+                Properties.Settings.Default["HarmonyPath"] = harmonyPath;
                 Properties.Settings.Default.Save();
             }
 
